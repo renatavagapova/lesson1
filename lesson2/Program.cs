@@ -4,9 +4,8 @@ using System.Collections.Generic;
 
 namespace lesson2
 {
-    
-        class Program
-        {
+     class Program
+     {
             #region Задания
             /*
              * Задание 1
@@ -55,7 +54,7 @@ namespace lesson2
             }
 
 
-        }
+     }
 
     
 }
