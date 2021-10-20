@@ -4,80 +4,75 @@ using System.Text;
 
 namespace lesson_6
 {
-    class Graph
+    public struct NodeEdge
     {
-        List<Vertex> Vertexes = new List<Vertex>();
-        List<Edge> Edges = new List<Edge>();
+        public char node;
+        public int weight;
 
-        public int VertexCount => Vertexes.Count;
-        public int EdgeCount => Edges.Count;
-
-        public void AddVertex(Vertex vertex)
+        public NodeEdge(char node, int weight)
         {
-            Vertexes.Add(vertex);
-        }
-
-        public void AddEdge(Vertex from, Vertex to)
-        {
-            var edge = new Edge(from, to);
-            Edges.Add(edge);
+            this.node = node;
+            this.weight = weight;
 
         }
+    }
 
-        public int[,] GetMatrix()
+    public struct GraphNode
+    {
+        public char node;
+        //public Stack<char> edges;
+
+        public Stack<NodeEdge> edges;
+
+        public GraphNode(char node)
         {
-            var matrix = new int[Vertexes.Count, Vertexes.Count];
+            this.node = node;
+            //edges = new Stack<char>();
+            edges = new Stack<NodeEdge>();
 
-            foreach (var edge in Edges)
-            {
-                var row = edge.From.Number;
-                var column = edge.To.Number;
-
-                matrix[row, column] = edge.Weight;
-            }
-            return matrix;
         }
 
-        public List<Vertex> GetVetexLists(Vertex vertex)
-        {
-            var result = new List<Vertex>();
+    }
 
-            foreach (var edge in Edges)
-            {
-                if (edge.From == vertex)
-                {
-                    result.Add(edge.To);
-                }
-            }
-            return result;
+    public class Graph
+    {
+        Stack<GraphNode> nodes;
+        public Graph()
+        {
+            nodes = new Stack<GraphNode>();
         }
 
-        public bool Wave(Vertex start, Vertex finish)
+        public void AddNode(char node)
         {
-            //var result = new List<Vertex>();
+            GraphNode graphNode = new GraphNode(node);
 
-            var list = new List<Vertex>
-            {
-                start
-            };
+            nodes.push(graphNode);
+        }
 
-            list.Add(start);
+        public void AddEdge(char node1, char node2, int weight)
+        {
+            //GetNode(node1).edges.push(node2);
+            //GetNode(node2).edges.push(node1);
 
-            for (int i = 0; i < list.Count; i++)
-            {
-                var vertex = list[i];
-                foreach (var v in GetVetexLists(vertex))
-                {
-                    if (!list.Contains(v))
-                    {
-                        list.Add(v);
+            GetNode(node1).edges.push(new NodeEdge(node2, weight));
+            GetNode(node2).edges.push(new NodeEdge(node1, weight));
 
-                    }
-                }
+            Console.WriteLine($"Вершина-{node1} Ребро-{weight} Вершина-{node2}");
+        }
 
-            }
+        public IEnumerable<char> GetNodes()
+        {
+            foreach (GraphNode graphNode in nodes.list())
+                yield return graphNode.node;
+        }
 
-            return list.Contains(finish);
+        public GraphNode GetNode(char node)
+        {
+            foreach (GraphNode graphNode in nodes.list())
+                if (graphNode.node == node)
+                    return graphNode;
+
+            throw new Exception("Node not found");
         }
 
     }
